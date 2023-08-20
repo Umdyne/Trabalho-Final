@@ -29,3 +29,7 @@ class Funcionario(Pessoa):
     @property
     def salario(self):
         return self._salario
+
+    @salario.setter
+    def salario(self, novo_salario):
+        self._salario = novo_salario

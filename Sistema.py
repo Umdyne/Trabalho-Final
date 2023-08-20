@@ -15,6 +15,16 @@ def verifica_int(numero):
         numero = input('Digite um numero valido: ')
         numero = verifica_int(numero)
         return numero
+
+def verifica_float(numero):
+
+    try:
+        numero = float(numero)
+        return numero
+    except:
+        numero = input('Digite um numero valido: ')
+        numero = verifica_float(numero)
+        return numero
     
 def verifica_data(data_str):
     try:
@@ -33,10 +43,7 @@ def verifica_email(email):
     else:
         return False
 
-
-
-    
-        
+      
 def menu(versao):
 
     if versao == 1:
@@ -48,7 +55,7 @@ def menu(versao):
         print("5 - Alterar/Remover um Produto")
         print("6 - Realizar uma venda")
         print("7 - Alterar Informações do usuario")
-        print("8 - Alterar Informações de outro usuario")
+        print("0 - Sair")
     
     opcao = input("Selecione uma opcao: ")
     
@@ -76,23 +83,39 @@ class Sistema():
     def usuarios(self, novo):
         self._usuarios.append(novo)
 
+    @property
+    def vendas(self):
+        return self._vendas
 
-    def verifica_cpf(self , novo_cpf):
-        if len(self.usuarios) != 0:
-            for usuario in self.usuarios:
-                print(usuario.cpf)
-                if usuario.cpf == novo_cpf:
-                    achou = 1
-                else:
-                    achou = 0
+    @vendas.setter
+    def vendas(self , nova_venda):
+        self._vendas.append(nova_venda)
 
-            if achou == 1:
-                cpf = input("Esse cpf ja esta registrado, digite outro: ")
-                cpf = verifica_int(cpf)
-                cpf = self.verifica_cpf(cpf)
-            
-        return novo_cpf
-    
+    @property
+    def produtos(self):
+        return self._produtos
+
+    @produtos.setter
+    def produtos(self, novo_produto):
+        self._produtos.append(novo_produto)
+        
+    def verifica_cpf(self, novo_cpf):
+        existe = False
+        
+        for usuario in self.usuarios:
+            if usuario.cpf == novo_cpf:
+                existe = True
+                
+        if existe:
+            novo_cpf = input("Esse CPF já está registrado, digite outro: ")
+            novo_cpf = verifica_int(novo_cpf) 
+            novo_cpf = self.verifica_cpf(novo_cpf)
+            retorno = novo_cpf
+        else:
+            retorno = novo_cpf
+
+        return retorno
+        
     def cria_Pessoa(self):
         
         pessoa = Pessoa()
@@ -101,8 +124,7 @@ class Sistema():
         cpf = input("Digite o cpf: ")
         cpf = verifica_int(cpf)
         cpf = self.verifica_cpf(cpf)
-                    
-        pessoa.cpf = cpf    
+        pessoa.cpf = cpf
         nascimento = input("Insira a data de nascimento (dd/mm/aaaa): ")
         pessoa.nascimento = verifica_data(nascimento)
         while pessoa.nascimento == 1:
@@ -116,7 +138,7 @@ class Sistema():
             pessoa.telefone = verifica_int(telefone)
         pessoa.email = input("Digite o email: ")
         while verifica_email(pessoa.email) == False:
-            pessoa.email = input("Digite um email valido: ")
+            pessoa.email = input("Digite um email valido: ")    
         return pessoa.nome , pessoa.cpf , pessoa.nascimento , pessoa.endereco , pessoa.telefone , pessoa.email
 
     def add_Cliente(self):
@@ -133,11 +155,104 @@ class Sistema():
         cliente.login = input("Cadastre o login: ")
         cliente.senha = input("Cadastre a senha: ")
 
-        cliente_D = { cliente.cpf : cliente }
-        
-        self.usuarios = cliente_D
+        self.usuarios = cliente
         print("Cadastro realizado")
+
+    def add_Funcionario(self):
+
+        funcionario = Funcionario()
+        pessoa = self.cria_Pessoa()
+
+        funcionario.nome = pessoa[0]
+        funcionario.cpf = pessoa[1]
+        funcionario.nascimento = pessoa[2]
+        funcionario.endereco = pessoa[3]
+        funcionario.telefone = pessoa[4]
+        funcionario.email = pessoa[5]
+        salario = input("Digite o salario: ")
+        salario = verifica_int(salario)
+        funcionario.salario = salario
+        funcionario.login = input("Cadastre o login: ")
+        funcionario.senha = input("Cadastre a senha: ")
         
+        self.usuarios = funcionario
+        print("Cadastro realizado")        
+
+    def add_Administrador(self):
+
+        administrador = Administrador()
+        pessoa = self.cria_Pessoa()
+
+        administrador.nome = pessoa[0]
+        administrador.cpf = pessoa[1]
+        administrador.nascimento = pessoa[2]
+        administrador.endereco = pessoa[3]
+        administrador.telefone = pessoa[4]
+        administrador.email = pessoa[5]
+        salario = input("Digite o salario: ")
+        salario = verifica_int(salario)
+        administrador.salario = salario
+        administrador.login = input("Cadastre o login: ")
+        administrador.senha = input("Cadastre a senha: ")
+        
+        self.usuarios = administrador
+        print("Cadastro realizado")  
+
+    def add_Produto(self):
+
+        produto = Produto()
+        
+        produto.nome = input("Digite o nome do produto: ")
+        produto.preco = input("Digite o preco do produto: ")
+        produto.preco = verifica_float(produto.preco)
+        produto.quantidade = input("Digite a quantidade do produto no estoque: ")
+        produto.quantidade = verifica_int(produto.quantidade)
+        produto.fornecedor = input("Digite o nome do fornecedor: ")
+        produto.id = len(self.produtos) + 1
+        self.produtos = produto
+        print("Produto cadastrado")  
+
+            
+
+    def listar_Produtos(self):
+        for produto in self.produtos:
+                print("\nId: ",produto.id)
+                print("Nome: ",produto.nome)
+                print("Preço: ",produto.preco)
+                print("Quantidade em estoque: ",produto.quantidade)
+                print("Fornecedor: ",produto.fornecedor)
+
+    def alterar_Produto(self):
+
+        existe = False
+        
+        if len(self.produtos) == 0:
+            print("Nenhum produto cadastrado. ")
+            
+        else:
+            produto_Id = input("Digite o ID do produto ou digite 0 para listar: ")
+            produto_Id = verifica_int(produto_Id)
+
+            if produto_Id == 0:
+                self.listar_Produtos()
+                produto_Id = input("Digite o ID do produto: ")
+                produto_Id = verifica_int(produto_Id)
+
+            for produto in self.produtos:
+                if produto_Id == produto.id:
+                    produto.nome = input("Digite o novo nome do produto: ")
+                    produto.preco = input("Digite o novo preco do produto: ")
+                    produto.preco = verifica_float(produto.preco)
+                    produto.quantidade = input("Digite a nova quantidade do produto no estoque: ")
+                    produto.quantidade = verifica_int(produto.quantidade)
+                    produto.fornecedor = input("Digite o novo nome do fornecedor: ")
+                    print("Produto atualizado")
+                    existe = True
+
+            if existe == False:
+                print("Produto não encontrado. ")
+                
+
     def iniciar(self):
         opcao = None
         while opcao != 0:
@@ -146,6 +261,30 @@ class Sistema():
 
             if opcao == 1:
                 self.add_Cliente()
+                
+            elif opcao == 2:
+                self.add_Funcionario()
+                
+            elif opcao == 3:
+                self.add_Administrador()
+
+            elif opcao == 4:
+                self.add_Produto()
+
+            elif opcao == 5:
+                self.alterar_Produto()    
+
+            elif opcao == 6:
+                self.realizar_Venda()
+                
+            elif opcao == 7:
+                self.alterar_Info()
+
+            elif opcao == 0:
+                print("Saindo. ")
+
+            else:
+                print("Opção invalida. ")
   
 sistema = Sistema()    
 #sistema.iniciar()

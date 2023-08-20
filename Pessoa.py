@@ -47,7 +47,7 @@ class Pessoa():
         return self._telefone
 
     @telefone.setter
-    def endereco(self , novo_telefone):
+    def telefone(self , novo_telefone):
         self._telefone = novo_telefone
 
     @property
@@ -55,5 +55,5 @@ class Pessoa():
         return self._email
 
     @email.setter
-    def endereco(self , novo_email):
+    def email(self , novo_email):
         self._email = novo_email    

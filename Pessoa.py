@@ -1,4 +1,6 @@
-class Pessoa():
+import abc
+
+class Pessoa(abc.ABC):
 
     __slots__ = ['_nome' , '_cpf' , '_nascimento' , '_endereco' , '_telefone' , '_email']
     

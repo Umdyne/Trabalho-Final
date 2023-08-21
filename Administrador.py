@@ -7,11 +7,4 @@ class Administrador(Funcionario):
     def __init__(self):
         super().__init__()
 
-    @property
-    def salario(self):
-        return self._salario
-
-    @salario.setter
-    def salario(self, novo_salario):
-        self._salario = novo_salario
 

@@ -3,7 +3,8 @@ from Cliente import Cliente
 from Funcionario import Funcionario
 from Administrador import Administrador
 from Produto import Produto
-from datetime import datetime
+from Venda import Venda
+from datetime import date
 import re
 
 def verifica_int(numero):
@@ -54,7 +55,7 @@ def menu(versao):
         print("4 - Cadastrar um Produto")
         print("5 - Alterar/Remover um Produto")
         print("6 - Realizar uma venda")
-        print("7 - Alterar Informações do usuario")
+        print("7 - Listar as vendas")
         print("0 - Sair")
     
     opcao = input("Selecione uma opcao: ")
@@ -252,11 +253,102 @@ class Sistema():
             if existe == False:
                 print("Produto não encontrado. ")
                 
+    def realizar_Venda(self):
+        venda = Venda()  
+        carrinho = []
 
+        
+        login = input("Digite seu login: ")
+
+        
+        usuario_encontrado = False
+        for usuario in self.usuarios:
+            print(usuario.login , login)
+            if str(usuario.login) == str(login):
+                id_Usuario = usuario.cpf
+                usuario_encontrado = True
+                for n in range(4):
+                    
+                    if n == 3:
+                        print("Limite atingido.")
+                        return
+                    senha = input("Digite sua senha: ")
+                    if str(usuario.senha) != str(senha):
+                        print("Senha incorreta.")
+                    else:
+                        break
+                    
+                break
+
+        if not usuario_encontrado:
+            print("Usuário não encontrado.")
+            return
+        
+        if len(self.produtos) == 0:
+            print("Não é possível realizar a venda, pois nenhum produto está cadastrado.")
+        else:
+            while True:
+                produto_Id = input("\nDigite o ID do produto para adicionar ao carrinho ou digite 0 para finalizar a compra: ")
+                produto_Id = verifica_int(produto_Id)  
+                
+                if produto_Id == 0:
+                    break
+                
+                produto_encontrado = False
+                for produto in self.produtos:
+                    if produto_Id == produto.id:
+                        print("Produto:", produto.nome)
+                        quantidade = input("Digite a quantidade: ")
+                        quantidade = verifica_int(quantidade)
+                        
+                        while quantidade > produto.quantidade:
+                            quantidade = input(f"Quantidade insuficiente, máximo: {produto.quantidade}\nDigite a quantidade: ")
+                            quantidade = verifica_int(quantidade)
+                            
+                        item = {
+                            'ID': produto.id,
+                            'Nome': produto.nome,
+                            'Quantidade': quantidade,
+                            'Valor': quantidade * produto.preco
+                        }
+                        if quantidade > 0:
+                            carrinho.append(item)
+                            produto.quantidade -= quantidade
+                        produto_encontrado = True
+                
+                if not produto_encontrado:
+                    print("Produto não encontrado.")
+                
+                print("Itens no carrinho:")
+                for produto in carrinho:
+                    print(produto)
+                
+        if not carrinho:
+            print("Carrinho vazio. Nenhuma compra foi feita.")
+        else:
+            venda.id = len(self.vendas) +1
+            venda.data = date.today()
+            venda.id_Usuario = id_Usuario 
+            venda.info_Produtos = carrinho
+            self.vendas = venda
+            print("Compra finalizada.")
+        
+            
+
+    def listar_Vendas(self):
+        for venda in self.vendas:
+            total = 0
+            print("\nVenda realizada para:", venda.id_Usuario, "\nData:", venda.data)
+            for produto in venda.info_Produtos:
+                print(produto)
+                total += produto['Quantidade'] * produto['Valor']
+            print("Valor Total:", total)
+
+            
     def iniciar(self):
         opcao = None
         while opcao != 0:
-            print('main')
+            
             opcao = menu(1)
 
             if opcao == 1:
@@ -278,7 +370,7 @@ class Sistema():
                 self.realizar_Venda()
                 
             elif opcao == 7:
-                self.alterar_Info()
+                self.listar_Vendas()
 
             elif opcao == 0:
                 print("Saindo. ")
@@ -288,3 +380,15 @@ class Sistema():
   
 sistema = Sistema()    
 #sistema.iniciar()
+
+
+
+
+
+
+
+
+
+
+
+

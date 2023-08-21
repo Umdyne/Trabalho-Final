@@ -1,13 +1,12 @@
 class Venda():
 
-    __slots__ = ['_id' , '_data' , '_id_Usuario' , '_id_Produto' , '_quantidade']
+    __slots__ = ['_id' , '_data' , '_id_Usuario' , '_info_Produtos']
 
     def __init__(self):
         self._id = None
         self._data = None
         self._id_Usuario = None
-        self._id_Produto = None
-        self._quantidade = None
+        self._info_Produtos = None
 
     @property
     def id(self):
@@ -34,17 +33,9 @@ class Venda():
         self._id_Usuario = usuario
 
     @property
-    def id_Produto(self):
-        return self._id_Produto
+    def info_Produtos(self):
+        return self._info_Produtos
 
-    @id_Produto.setter
-    def id_Produto(self, produto):
-        self._id_Produto = produto
-
-    @property
-    def quantidade(self):
-        return self._quantidade
-
-    @quantidade.setter
-    def quantidade(self, quantidade):
-        self._quantidade = quantidade    
+    @info_Produtos.setter
+    def info_Produtos(self, produto):
+        self._info_Produtos = produto   

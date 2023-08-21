@@ -5,39 +5,32 @@ from Cliente import Cliente
 from Produto import Produto
 import re
 
-s = Sistema()
+sistema = Sistema()
+usuario = Cliente()
+usuario.nome = 'usuario1'
+usuario.cpf = 1
+usuario.login = '1'
+usuario.senha = '1'
+sistema.usuarios = usuario
 
-c = Cliente()
-c2 = Cliente()
-c3 = Cliente()
-c4 = Cliente()
-c.nome = 'Pe1'
-c.cpf = 1
-c2.nome = 'Pe2'
-c2.cpf = 2
-c3.nome = 'Pe3'
-c3.cpf = 3
-c4.nome = 'Pe4'
-c4.cpf = 4
-s.usuarios = c
-s.usuarios = c2
-s.usuarios = c3
-s.usuarios = c4
+produto1 = Produto()
+produto2 = Produto()
+produto1.id = 1
+produto1.nome = "produto1"
+produto1.quantidade = 10
+produto1.preco = 10
+produto1.fornecedor = "fornecedor1"
 
-p = Produto()
-p.nome = "produto1"
-p.id = 1
-p.quantidade = 10
-p2 = Produto()
-p2.nome = "produto2"
-p2.id = 2
-p2.quantidade = 20
+produto2.id = 2
+produto2.nome = "produto2"
+produto2.quantidade = 10
+produto2.preco = 12.5
+produto2.fornecedor = "fornecedor2"
 
-s.produtos = p
-s.produtos = p2
+sistema.produtos = produto1
+sistema.produtos = produto2
 
 
-s.listar_Produtos()
 
 
 
